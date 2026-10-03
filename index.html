@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy National Boyfriend Day! 💖</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@700&family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'love-pink': '#ff758c',
+              'love-rose': '#ff7eb3',
+              'love-dark': '#be123c',
+              'soft-cream': '#fff5f5',
+            },
+            fontFamily: {
+              poppins: ['Poppins', 'sans-serif'],
+              dancing: ['Dancing Script', 'cursive'],
+              caveat: ['Caveat', 'cursive'],
+              pacifico: ['Pacifico', 'cursive'],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Custom Styling & Flip Effect */
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #fce7f3 0%, #ffe4e6 50%, #fbcfe8 100%);
+        overflow-x: hidden;
+      }
+
+      .font-dancing {
+        font-family: 'Dancing Script', cursive;
+      }
+      .font-caveat {
+        font-family: 'Caveat', cursive;
+      }
+      .font-pacifico {
+        font-family: 'Pacifico', cursive;
+      }
+
+      /* Glassmorphism */
+      .glass {
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+      }
+
+      .glass-dark {
+        background: rgba(255, 241, 242, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 205, 210, 0.5);
+      }
+
+      /* Heart Canvas background overlay */
+      #heartCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* QRIS Heart Glow */
+      .qris-heart-glow {
+        filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.6));
+        animation: pulse-glow 2s infinite ease-in-out;
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.6));
+          transform: scale(1);
+        }
+        50% {
+          filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.9));
+          transform: scale(1.02);
+        }
+      }
+
+      /* Scan line animation */
+      .scan-line {
+        position: absolute;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #ef4444, #f43f5e, transparent);
+        box-shadow: 0 0 15px #f43f5e;
+        animation: scan 2s infinite linear;
+      }
+
+      @keyframes scan {
+        0% {
+          top: 10%;
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        85% {
+          opacity: 1;
+        }
+        100% {
+          top: 90%;
+          opacity: 0;
+        }
+      }
+
+      /* 3D Card Flip */
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+      .transform-style-3d {
+        transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .backface-hidden {
+        backface-visibility: hidden;
+      }
+      .rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+
+      /* Vinyl Spin */
+      .spin-slow {
+        animation: spin 8s linear infinite;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Floating Hearts Animation */
+      .floating-heart {
+        position: absolute;
+        pointer-events: none;
+        animation: floatUp 4s ease-in forwards;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(0) scale(0.8) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) scale(1.3) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Envelope Animation */
+      .envelope-wrapper {
+        perspective: 1000px;
+      }
+      .envelope {
+        position: relative;
+        transition: transform 0.5s ease;
+      }
+      .envelope-flap {
+        transform-origin: top;
+        transition: transform 0.6s ease;
+      }
+      .envelope.open .envelope-flap {
+        transform: rotateX(180deg);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-800 relative selection:bg-rose-300 selection:text-rose-900">
+    <canvas id="heartCanvas"></canvas>
+
+    <!-- ==========================================
+         1. LOCK SCREEN / QRIS PAYMENT SECTION 
+         ========================================== -->
+    <div id="lockScreen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-rose-100 via-pink-200 to-red-100">
+      <div class="glass max-w-md w-full rounded-3xl p-6 md:p-8 text-center shadow-2xl relative overflow-hidden border-2 border-white/80">
+        <!-- Floating Decorative Badges -->
+        <div class="absolute -top-6 -right-6 w-24 h-24 bg-rose-400/20 rounded-full blur-xl"></div>
+        <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-pink-400/20 rounded-full blur-xl"></div>
+
+        <div class="inline-block px-4 py-1.5 bg-rose-100 text-rose-600 rounded-full text-xs font-semibold tracking-wide uppercase mb-3 shadow-sm border border-rose-200">
+          <i class="fa-solid fa-lock mr-1.5"></i> Special Gate for My Boyfriend
+        </div>
+
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-1">Unlock My Heart 💖</h1>
+        <p class="text-sm text-slate-600 mb-6">Scan QRIS Love di bawah ini untuk membuka kejutan spesial National Boyfriend Day!</p>
+
+        <!-- Heart Shaped QRIS Display -->
+        <div class="relative w-64 h-64 mx-auto mb-6 flex items-center justify-center qris-heart-glow">
+          <!-- SVG Heart Mask QRIS Container -->
+          <div class="relative w-full h-full flex items-center justify-center">
+            <!-- SVG Heart Shape with QR Code Patterns inside -->
+            <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md">
+              <defs>
+                <!-- Heart Clip Path -->
+                <clipPath id="heartClip">
+                  <path d="M 100, 30 C 60, -20, 0, 40, 100, 180 C 200, 40, 140, -20, 100, 30 Z" />
+                </clipPath>
+
+                <!-- Linear Gradient for QR heart -->
+                <linearGradient id="qrisGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#be123c" />
+                  <stop offset="50%" stop-color="#e11d48" />
+                  <stop offset="100%" stop-color="#fb7185" />
+                </linearGradient>
+              </defs>
+
+              <!-- White Heart Background -->
+              <path d="M 100, 30 C 60, -20, 0, 40, 100, 180 C 200, 40, 140, -20, 100, 30 Z" fill="#ffffff" stroke="#f43f5e" stroke-width="4" />
+
+              <!-- QR Code Pattern clipped to Heart -->
+              <g clip-path="url(#heartClip)">
+                <!-- Background QR grid lines / dots simulation -->
+                <rect x="0" y="0" width="200" height="200" fill="#ffffff" />
+
+                <!-- QR Position Detection Patterns (Top Left, Top Right, Center Bottom) -->
+                <!-- Top Left -->
+                <rect x="40" y="30" width="30" height="30" fill="#be123c" rx="4" />
+                <rect x="45" y="35" width="20" height="20" fill="#ffffff" rx="2" />
+                <rect x="50" y="40" width="10" height="10" fill="#be123c" rx="1" />
+
+                <!-- Top Right -->
+                <rect x="130" y="30" width="30" height="30" fill="#be123c" rx="4" />
+                <rect x="135" y="35" width="20" height="20" fill="#ffffff" rx="2" />
+                <rect x="140" y="40" width="10" height="10" fill="#be123c" rx="1" />
+
+                <!-- Bottom Center -->
+                <rect x="85" y="115" width="30" height="30" fill="#be123c" rx="4" />
+                <rect x="90" y="120" width="20" height="20" fill="#ffffff" rx="2" />
+                <rect x="95" y="125" width="10" height="10" fill="#be123c" rx="1" />
+
+                <!-- Random QR Data Modules -->
+                <!-- Row 1 -->
+                <rect x="80" y="30" width="8" height="8" fill="#e11d48" />
+                <rect x="95" y="30" width="8" height="8" fill="#e11d48" />
+                <rect x="110" y="30" width="8" height="8" fill="#e11d48" />
+                <!-- Row 2 -->
+                <rect x="35" y="70" width="10" height="10" fill="#e11d48" />
+                <rect x="50" y="65" width="8" height="8" fill="#be123c" />
+                <rect x="65" y="70" width="12" height="12" fill="#e11d48" />
+                <rect x="85" y="65" width="8" height="8" fill="#e11d48" />
+                <rect x="100" y="70" width="10" height="10" fill="#be123c" />
+                <rect x="120" y="65" width="8" height="8" fill="#e11d48" />
+                <rect x="140" y="70" width="12" height="12" fill="#be123c" />
+                <rect x="160" y="70" width="8" height="8" fill="#e11d48" />
+
+                <!-- Row 3 -->
+                <rect x="40" y="90" width="12" height="12" fill="#be123c" />
+                <rect x="60" y="88" width="8" height="8" fill="#e11d48" />
+                <rect x="75" y="90" width="10" height="10" fill="#be123c" />
+                <rect x="95" y="85" width="12" height="12" fill="#e11d48" />
+                <rect x="115" y="90" width="8" height="8" fill="#be123c" />
+                <rect x="130" y="88" width="12" height="12" fill="#e11d48" />
+                <rect x="150" y="90" width="10" height="10" fill="#be123c" />
+
+                <!-- Row 4 -->
+                <rect x="50" y="110" width="8" height="8" fill="#e11d48" />
+                <rect x="65" y="112" width="10" height="10" fill="#be123c" />
+                <rect x="125" y="110" width="10" height="10" fill="#be123c" />
+                <rect x="140" y="112" width="8" height="8" fill="#e11d48" />
+
+                <!-- Center Logo Badge -->
+                <circle cx="100" cy="75" r="14" fill="#ffffff" stroke="#f43f5e" stroke-width="2" />
+                <path d="M 100 80 C 100 80 92 74 92 69.5 C 92 67 94 65 96.5 65 C 98 65 99.3 66 100 67 C 100.7 66 102 65 103.5 65 C 106 65 108 67 108 69.5 C 108 74 100 80 100 80 Z" fill="#f43f5e" />
+              </g>
+            </svg>
+
+            <!-- Scanning Laser Overlay -->
+            <div id="scanLine" class="scan-line hidden"></div>
+          </div>
+        </div>
+
+        <!-- Payment Nominal Tag -->
+        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 mb-6">
+          <p class="text-xs text-rose-500 font-medium">Nominal Pembayaran Cinta:</p>
+          <p class="text-lg md:text-xl font-bold text-rose-700 font-poppins">Rp 100.000.000 <span class="text-xs font-normal text-rose-500">(Hugs & Kisses)</span></p>
+        </div>
+
+        <!-- Pay / Scan Action Button -->
+        <button
+          id="payBtn"
+          onclick="processPayment()"
+          class="w-full py-4 px-6 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-300 transition-all transform active:scale-95 flex items-center justify-center gap-3 text-base">
+          <i class="fa-solid fa-[#ffffff] fa-qrcode text-xl"></i>
+          <span>Bayar & Scan QRIS Cinta</span>
+        </button>
+
+        <!-- Simulated Payment Status Modal inside -->
+        <div id="payStatus" class="hidden mt-4 text-rose-600 font-medium text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <span id="payStatusText">Memproses Cinta...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         2. MAIN WEBSITE CONTENT (Initially Visible after Unlock)
+         ========================================== -->
+    <div id="mainContent" class="opacity-0 transition-opacity duration-1000 hidden min-h-screen pb-20">
+      <!-- Sticky Music Player / Audio Bar -->
+      <div class="fixed top-4 right-4 z-40">
+        <div class="glass px-4 py-2.5 rounded-full shadow-lg flex items-center gap-3 border border-white/80">
+          <button id="musicToggle" onclick="toggleMusic()" class="w-10 h-10 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md hover:bg-rose-600 transition">
+            <i id="musicIcon" class="fa-solid fa-music"></i>
+          </button>
+          <div class="text-xs hidden sm:block pr-2">
+            <p class="font-bold text-slate-800">Perfect Melody 🎶</p>
+            <p id="musicStatusText" class="text-slate-500 text-[10px]">Klik untuk Putar Musik</p>
+          </div>
+          <!-- Vinyl Disc Animation -->
+          <div id="vinylDisc" class="w-8 h-8 rounded-full bg-slate-900 border-2 border-amber-200 flex items-center justify-center relative">
+            <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO SECTION -->
+      <section class="relative pt-16 pb-12 px-4 text-center max-w-4xl mx-auto">
+        <div class="inline-block px-4 py-1.5 bg-rose-200/60 text-rose-800 rounded-full text-xs md:text-sm font-semibold mb-4 backdrop-blur-sm border border-rose-300/50">✨ Special Edition • October 3rd ✨</div>
+
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold font-dancing text-rose-600 mb-4 leading-tight drop-shadow-sm">Happy National Boyfriend Day! 👦🏻💖</h1>
+
+        <p class="text-slate-700 text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed mb-8">
+          Untuk cowok terfavorit, tersayang, dan paling bikin kangen setiap hari. Terima kasih sudah menjadi alasan di balik senyuman manisku! 🥰
+        </p>
+
+        <!-- Memory Counter Badge -->
+        <div class="glass-dark max-w-md mx-auto p-4 rounded-2xl shadow-sm border border-rose-200 flex justify-around items-center text-center">
+          <div>
+            <span id="daysCount" class="text-2xl md:text-3xl font-bold text-rose-600 font-poppins">365+</span>
+            <p class="text-xs text-slate-500">Hari Bersama</p>
+          </div>
+          <div class="h-8 w-px bg-rose-200"></div>
+          <div>
+            <span class="text-2xl md:text-3xl font-bold text-rose-600 font-poppins">∞</span>
+            <p class="text-xs text-slate-500">Cinta & Kasih</p>
+          </div>
+          <div class="h-8 w-px bg-rose-200"></div>
+          <div>
+            <span class="text-2xl md:text-3xl font-bold text-rose-600 font-poppins">100%</span>
+            <p class="text-xs text-slate-500">Milikmu</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOVE LETTER SECTION (Interactive Envelope) -->
+      <section class="max-w-2xl mx-auto px-4 py-8">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl md:text-3xl font-bold font-dancing text-rose-600">Surat Cinta Untukmu 💌</h2>
+          <p class="text-xs text-slate-500">Klik amplop di bawah untuk membuka & membaca alasannya</p>
+        </div>
+
+        <div class="envelope-wrapper flex justify-center cursor-pointer" onclick="openEnvelope()">
+          <div id="envelopeCard" class="glass w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden transition-all duration-500 border border-white">
+            <div id="envelopeClosed" class="text-center py-8">
+              <div class="w-20 h-20 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner border border-rose-200">
+                <i class="fa-solid fa-heart animate-bounce"></i>
+              </div>
+              <h3 class="text-lg font-bold text-slate-800 mb-1">Ada Pesan Spesial Nunggu Kamu!</h3>
+              <p class="text-xs text-rose-500 font-medium">Sentuh di sini untuk membuka amplop ✨</p>
+            </div>
+
+            <!-- Envelope Content (Hidden initially) -->
+            <div id="envelopeOpen" class="hidden">
+              <div class="flex justify-between items-center mb-4 border-b border-rose-100 pb-3">
+                <span class="font-caveat text-xl text-rose-600 font-bold">Dear My Favorite Boy ❤️</span>
+                <span class="text-xs text-slate-400">National Boyfriend Day</span>
+              </div>
+              <p id="typedLetter" class="text-slate-700 text-sm md:text-base leading-relaxed font-caveat text-lg md:text-xl min-h-[140px] whitespace-pre-line"></p>
+              <div class="mt-4 text-right">
+                <p class="font-dancing text-lg text-rose-600 font-bold">Dengan Sejuta Cinta,</p>
+                <p class="text-xs text-slate-500 italic">Pasanganmu yang paling gemes 🌸</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- POLAROID PHOTO GALLERY SECTION -->
+      <section class="max-w-5xl mx-auto px-4 py-10">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold font-dancing text-rose-600">Galeri Momen Manis Kita 📸</h2>
+          <p class="text-xs text-slate-500">Klik/tap foto polaroid di bawah untuk membalik dan membaca kenangan!</p>
+        </div>
+
+        <!-- Grid of Flippable Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Card 1 -->
+          <div class="perspective-1000 h-80 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d shadow-lg rounded-2xl bg-white p-4 border border-slate-100">
+              <!-- Front -->
+              <div class="absolute inset-0 p-4 backface-hidden flex flex-col items-center justify-between bg-white rounded-2xl">
+                <div class="w-full h-52 bg-rose-100 rounded-xl overflow-hidden relative flex items-center justify-center">
+                  <img src="Mirror.jpeg" alt="Moment 1" class="w-full h-full object-cover" />
+                  <span class="absolute top-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1 rounded-full text-[10px] font-bold text-rose-600">✨ Momen #1</span>
+                </div>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 p-6 backface-hidden rotate-y-180 bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl flex flex-col justify-center items-center text-center border border-rose-200">
+                <i class="fa-solid fa-quote-left text-rose-300 text-2xl mb-2"></i>
+                <p class="text-sm font-poppins text-slate-700 italic">"Aku paling suka liat senyum kamu."</p>
+                <span class="mt-4 text-xs font-bold text-rose-500">❤️ I Love Your Smile</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="perspective-1000 h-80 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d shadow-lg rounded-2xl bg-white p-4 border border-slate-100">
+              <!-- Front -->
+              <div class="absolute inset-0 p-4 backface-hidden flex flex-col items-center justify-between bg-white rounded-2xl">
+                <div class="w-full h-52 bg-rose-100 rounded-xl overflow-hidden relative flex items-center justify-center">
+                  <img src="Gitar.jpeg" alt="Moment 2" class="w-full h-full object-cover" />
+                  <span class="absolute top-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1 rounded-full text-[10px] font-bold text-rose-600">✨ Momen #2</span>
+                </div>
+                <p class="font-caveat text-xl text-slate-700 font-bold mt-2">Selalu Ada Untukku 🤝</p>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 p-6 backface-hidden rotate-y-180 bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl flex flex-col justify-center items-center text-center border border-rose-200">
+                <i class="fa-solid fa-quote-left text-rose-300 text-2xl mb-2"></i>
+                <p class="text-sm font-poppins text-slate-700 italic">"Makasih ya udah selalu sabar ngerawat dan dengerin semua cerita random aku selalu."</p>
+                <span class="mt-4 text-xs font-bold text-rose-500">🤗 Best Support System</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="perspective-1000 h-80 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d shadow-lg rounded-2xl bg-white p-4 border border-slate-100">
+              <!-- Front -->
+              <div class="absolute inset-0 p-4 backface-hidden flex flex-col items-center justify-between bg-white rounded-2xl">
+                <div class="w-full h-52 bg-rose-100 rounded-xl overflow-hidden relative flex items-center justify-center">
+                  <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80" alt="Moment 3" class="w-full h-full object-cover" />
+                  <span class="absolute top-2 right-2 bg-white/80 backdrop-blur-md px-2 py-1 rounded-full text-[10px] font-bold text-rose-600">✨ Momen #3</span>
+                </div>
+                <p class="font-caveat text-xl text-slate-700 font-bold mt-2">Masa Depan Bersama 🚀</p>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 p-6 backface-hidden rotate-y-180 bg-gradient-to-br from-rose-50 to-pink-100 rounded-2xl flex flex-col justify-center items-center text-center border border-rose-200">
+                <i class="fa-solid fa-quote-left text-rose-300 text-2xl mb-2"></i>
+                <p class="text-sm font-poppins text-slate-700 italic">"Semoga kita terus saling merangkul dan bertumbuh bareng sampai impian-impian kita terwujud!"</p>
+                <span class="mt-4 text-xs font-bold text-rose-500">🔒 Forever & Always</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REASONS WHY I LOVE YOU (SPIN WHEEL / SURPRISE) -->
+      <section class="max-w-2xl mx-auto px-4 py-8">
+        <div class="glass rounded-3xl p-6 md:p-8 shadow-xl text-center border border-white">
+          <h2 class="text-2xl md:text-3xl font-bold font-dancing text-rose-600 mb-2">Roda Alasan Sayang Kamu 🎡</h2>
+          <p class="text-xs text-slate-500 mb-6">Putar roda untuk tahu 1 dari sekian banyak alasan aku sayang banget sama kamu!</p>
+
+          <!-- Spin Display Box -->
+          <div id="reasonDisplay" class="bg-rose-50 border-2 border-dashed border-rose-300 rounded-2xl p-6 mb-6 min-h-[100px] flex items-center justify-center transition-all">
+            <p class="text-slate-600 font-medium text-sm md:text-base">Tekan tombol "Putar Roda Cinta" di bawah! 👇</p>
+          </div>
+
+          <button onclick="spinReason()" class="py-3 px-8 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 transition transform active:scale-95 inline-flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Putar Roda Cinta</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SEND HUGS & KISSES BUTTON SECTION -->
+      <section class="max-w-md mx-auto px-4 py-10 text-center">
+        <p class="text-xs text-rose-500 font-bold uppercase tracking-wider mb-2">Mau Kirim Kasih Sayang?</p>
+        <button
+          onclick="sendHugsAndKisses()"
+          class="w-full py-5 px-8 bg-gradient-to-r from-pink-500 via-rose-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-bold text-lg rounded-3xl shadow-xl shadow-rose-300 transition transform active:scale-90 hover:scale-105 flex items-center justify-center gap-3 border-2 border-white/50">
+          <i class="fa-solid fa-heart text-2xl animate-ping"></i>
+          <span>KIRIM PELUK & CIUM SEKARANG! 💖</span>
+        </button>
+        <p id="hugCountText" class="text-xs text-slate-500 mt-3">Sudah dikirim <span id="hugCounter" class="font-bold text-rose-600">0</span>x pelukan hangat!</p>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="text-center text-xs text-slate-500 py-6">
+        <p>Made with ❤️ specially for Happy National Boyfriend Day</p>
+        <p class="mt-1 text-[10px] text-slate-400">Forever Yours • All Rights Reserved</p>
+      </footer>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+      /* ==========================================
+           1. CANVAS BACKGROUND FLOATING HEARTS
+           ========================================== */
+      const canvas = document.getElementById('heartCanvas');
+      const ctx = canvas.getContext('2d');
+      let hearts = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      class ParticleHeart {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = canvas.height + Math.random() * 100;
+          this.size = Math.random() * 12 + 8;
+          this.speedY = Math.random() * 1.2 + 0.5;
+          this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+          this.opacity = Math.random() * 0.6 + 0.2;
+          this.color = `hsl(${Math.random() * 20 + 340}, 80%, 75%)`;
+        }
+
+        update() {
+          this.y -= this.speedY;
+          this.x += this.speedX;
+          if (this.y < -20) {
+            this.reset();
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          const topCurveHeight = this.size * 0.3;
+          ctx.moveTo(this.x, this.y + topCurveHeight);
+          // top left curve
+          ctx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+          // bottom left curve
+          ctx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + this.size, this.x, this.y + this.size);
+          // bottom right curve
+          ctx.bezierCurveTo(this.x, this.y + this.size, this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight);
+          // top right curve
+          ctx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      for (let i = 0; i < 25; i++) {
+        hearts.push(new ParticleHeart());
+      }
+
+      function animateCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hearts.forEach((h) => {
+          h.update();
+          h.draw();
+        });
+        requestAnimationFrame(animateCanvas);
+      }
+      animateCanvas();
+
+      /* ==========================================
+           2. WEB AUDIO SYNTHESIZER (Romantic Melody)
+           ========================================== */
+      let audioCtx = null;
+      let isPlayingMusic = false;
+      let musicInterval = null;
+
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+
+      function playNote(freq, duration = 0.5, delay = 0) {
+        if (!audioCtx) return;
+        setTimeout(() => {
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+          } catch (e) {}
+        }, delay * 1000);
+      }
+
+      const melodyNotes = [
+        261.63,
+        329.63,
+        392.0,
+        523.25, // C4, E4, G4, C5
+        349.23,
+        440.0,
+        523.25,
+        698.46, // F4, A4, C5, F5
+        392.0,
+        493.88,
+        587.33,
+        783.99, // G4, B4, D5, G5
+        440.0,
+        349.23,
+        329.63,
+        261.63, // A4, F4, E4, C4
+      ];
+
+      function playRomanticMelody() {
+        let noteIdx = 0;
+        musicInterval = setInterval(() => {
+          if (!isPlayingMusic) return;
+          playNote(melodyNotes[noteIdx], 0.8);
+          noteIdx = (noteIdx + 1) % melodyNotes.length;
+        }, 600);
+      }
+
+      function toggleMusic() {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const vinyl = document.getElementById('vinylDisc');
+        const icon = document.getElementById('musicIcon');
+        const status = document.getElementById('musicStatusText');
+
+        if (isPlayingMusic) {
+          isPlayingMusic = false;
+          clearInterval(musicInterval);
+          vinyl.classList.remove('spin-slow');
+          icon.className = 'fa-solid fa-music';
+          status.innerText = 'Klik untuk Putar Musik';
+        } else {
+          isPlayingMusic = true;
+          playRomanticMelody();
+          vinyl.classList.add('spin-slow');
+          icon.className = 'fa-solid fa-pause';
+          status.innerText = 'Memutar Musik Romantis 🎵';
+        }
+      }
+
+      /* ==========================================
+           3. PAYMENT / QRIS UNLOCK LOGIC
+           ========================================== */
+      function processPayment() {
+        initAudio();
+        const payBtn = document.getElementById('payBtn');
+        const scanLine = document.getElementById('scanLine');
+        const payStatus = document.getElementById('payStatus');
+        const payStatusText = document.getElementById('payStatusText');
+
+        // Disable button & show scanning line
+        payBtn.disabled = true;
+        payBtn.classList.add('opacity-75');
+        scanLine.classList.remove('hidden');
+        payStatus.classList.remove('hidden');
+
+        const steps = ['Memindai QRIS Cinta...', 'Memverifikasi Hugs & Kisses...', 'Transaksi Cinta Berhasil! 💖'];
+
+        let stepIndex = 0;
+        const stepTimer = setInterval(() => {
+          stepIndex++;
+          if (stepIndex < steps.length) {
+            payStatusText.innerText = steps[stepIndex];
+            // play chime sound
+            playNote(400 + stepIndex * 200, 0.3);
+          } else {
+            clearInterval(stepTimer);
+
+            // Trigger Fireworks / Confetti Explosion
+            triggerSuccessConfetti();
+
+            // Play success sound notes
+            playNote(523.25, 0.3, 0); // C5
+            playNote(659.25, 0.3, 0.1); // E5
+            playNote(783.99, 0.5, 0.2); // G5
+            playNote(1046.5, 0.8, 0.3); // C6
+
+            setTimeout(() => {
+              // Hide Lockscreen with smooth fade
+              const lockScreen = document.getElementById('lockScreen');
+              lockScreen.style.transition = 'all 0.8s ease';
+              lockScreen.style.opacity = '0';
+              lockScreen.style.transform = 'scale(1.05)';
+
+              setTimeout(() => {
+                lockScreen.classList.add('hidden');
+
+                // Show Main Content
+                const mainContent = document.getElementById('mainContent');
+                mainContent.classList.remove('hidden');
+                setTimeout(() => {
+                  mainContent.classList.remove('opacity-0');
+                }, 50);
+
+                // Auto Start Background Music
+                toggleMusic();
+              }, 800);
+            }, 1000);
+          }
+        }, 1000);
+      }
+
+      function triggerSuccessConfetti() {
+        const count = 200;
+        const defaults = {
+          origin: { y: 0.7 },
+        };
+
+        function fire(particleRatio, opts) {
+          confetti(
+            Object.assign({}, defaults, opts, {
+              particleCount: Math.floor(count * particleRatio),
+            }),
+          );
+        }
+
+        fire(0.25, {
+          spread: 26,
+          startVelocity: 55,
+          colors: ['#ff758c', '#ff7eb3', '#ffffff'],
+        });
+        fire(0.2, {
+          spread: 60,
+          colors: ['#f43f5e', '#fb7185'],
+        });
+        fire(0.35, {
+          spread: 100,
+          decay: 0.91,
+          scalar: 0.8,
+        });
+        fire(0.1, {
+          spread: 120,
+          startVelocity: 25,
+          decay: 0.92,
+          colors: ['#ffe4e6', '#fbcfe8'],
+        });
+      }
+
+      /* ==========================================
+           4. LOVE LETTER TYPEWRITER LOGIC
+           ========================================== */
+      let letterOpened = false;
+      const letterText = `Happy National Boyfriend Day, sayang! 💖\n\nMakasih banyak ya udah selalu sabar, penyayang, dan selalu bikin hariku jadi lebih hangat. Kamu bukan cuma pacar yang luar biasa, tapi juga sahabat terbaik buat aku cerita apa aja.\n\nSemoga hari ini bikin kamu senyum-senyum sendiri ya! I love you so much today, tomorrow, and forever! 🌸✨`;
+
+      function openEnvelope() {
+        if (letterOpened) return;
+        letterOpened = true;
+
+        const envelopeClosed = document.getElementById('envelopeClosed');
+        const envelopeOpen = document.getElementById('envelopeOpen');
+        const typedTextElem = document.getElementById('typedLetter');
+
+        envelopeClosed.classList.add('hidden');
+        envelopeOpen.classList.remove('hidden');
+
+        let idx = 0;
+        function typeNextChar() {
+          if (idx < letterText.length) {
+            typedTextElem.textContent += letterText.charAt(idx);
+            idx++;
+            setTimeout(typeNextChar, 35);
+          }
+        }
+        typeNextChar();
+      }
+
+      /* ==========================================
+           5. POLAROID CARD FLIP
+           ========================================== */
+      function flipCard(cardElem) {
+        const inner = cardElem.querySelector('.card-inner');
+        inner.classList.toggle('rotate-y-180');
+        playNote(500, 0.1);
+      }
+
+      /* ==========================================
+           6. REASONS SPIN WHEEL
+           ========================================== */
+      const reasons = [
+        '🥰 Kamu selalu tahu cara bikin aku tersenyum waktu lagi capek.',
+        '🤗 Pelukan dan perhatian kamu selalu terasa paling hangat.',
+        '🎧 Selera musik dan humor kamu yang selalu sepemikiran sama aku.',
+        '✨ Kamu selalu dukung semua impian dan cita-citaku.',
+        '💖 Tatapan mata kamu yang selalu lembut waktu ngeliat aku.',
+        '🍕 Kamu selalu rela nemenin dan bagi makanan favorit kamu!',
+        '🔒 Kesabaran kamu yang seluas samudra ngadepin sikap manja aku.',
+      ];
+
+      function spinReason() {
+        const display = document.getElementById('reasonDisplay');
+        playNote(600, 0.15);
+
+        display.classList.add('scale-95', 'opacity-50');
+        setTimeout(() => {
+          const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+          display.innerHTML = `<p class="text-rose-700 font-bold text-base md:text-lg font-caveat animate-fade-in">"${randomReason}"</p>`;
+          display.classList.remove('scale-95', 'opacity-50');
+          playNote(800, 0.2);
+        }, 300);
+      }
+
+      /* ==========================================
+           7. SEND HUGS & KISSES BUTTON
+           ========================================== */
+      let hugCount = 0;
+      function sendHugsAndKisses() {
+        hugCount += 1;
+        document.getElementById('hugCounter').innerText = hugCount;
+
+        // Spawn floating hearts from button
+        for (let i = 0; i < 15; i++) {
+          createFloatingEmoji();
+        }
+
+        // Confetti
+        confetti({
+          particleCount: 40,
+          spread: 70,
+          origin: { y: 0.8 },
+          colors: ['#ff758c', '#f43f5e', '#ffffff'],
+        });
+
+        // Play cute sound effect
+        playNote(600 + Math.random() * 300, 0.2);
+      }
+
+      function createFloatingEmoji() {
+        const emojis = ['💖', '💕', '💋', '🤗', '🌸', '✨'];
+        const emoji = document.createElement('div');
+        emoji.className = 'floating-heart text-2xl';
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 80 + 10 + 'vw';
+        emoji.style.bottom = '100px';
+        document.body.appendChild(emoji);
+
+        setTimeout(() => {
+          emoji.remove();
+        }, 4000);
+      }
+    </script>
+  </body>
+</html>
